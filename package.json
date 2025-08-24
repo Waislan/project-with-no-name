@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node api/server.js",
     "dev": "NODE_ENV=development node api/server.js",
-    "build": "echo 'Build completed'",
-    "vercel-build": "echo 'Vercel build completed'",
+    "build": "echo 'Build completed successfully'",
+    "vercel-build": "echo 'Vercel build completed successfully'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
