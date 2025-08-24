@@ -8,19 +8,27 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
-
-const main = async () => {
+// Função para inicializar a aplicação
+const initializeApp = async () => {
     const db = await connectToDatabase();
-    console.log('Connected to database!') 
+    console.log('Connected to database!');
 
     const appInstance = new App(db, [registerUserRoutes, registerPatientRoutes, registerConsultationRoutes]);
     await appInstance.setup();
 
-    const app = appInstance.getInstance();
+    return appInstance.getInstance();
+};
 
-    app.listen(PORT, () => {
-        console.log(`Servidor rodando em http://localhost:${PORT}`);
+// Para desenvolvimento local
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    
+    initializeApp().then(app => {
+        app.listen(PORT, () => {
+            console.log(`Servidor rodando em http://localhost:${PORT}`);
+        });
     });
 }
-main();
+
+// Para Vercel - exporta a aplicação
+export default initializeApp;

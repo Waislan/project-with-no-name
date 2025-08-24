@@ -3,8 +3,15 @@ const { Pool } = pkg;
 
 export async function connectToDatabase(config = {}) {
     try {
+        // Usa DATABASE_URL para compatibilidade com Vercel, com fallback para DB_URL
+        const connectionString = process.env.DATABASE_URL || process.env.DB_URL;
+        
+        if (!connectionString) {
+            throw new Error('DATABASE_URL or DB_URL environment variable is required');
+        }
+
         const pool = new Pool({
-            connectionString: process.env.DB_URL,
+            connectionString: connectionString,
             ssl: { rejectUnauthorized: false }
             // host: process.env.DB_HOST || 'localhost',
             // port: process.env.DB_PORT || 5432,

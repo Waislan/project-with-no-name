@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "server.js",
+  "main": "api/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node api/server.js",
+    "dev": "NODE_ENV=development node api/server.js",
+    "build": "echo 'Build completed'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,5 +17,8 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "pg": "^8.16.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
