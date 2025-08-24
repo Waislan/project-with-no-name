@@ -2,7 +2,7 @@ import express from 'express';
 import { connectToDatabase } from './database/db.js';
 import registerUserRoutes from './routes/UserRoutes.js';
 import registerPatientRoutes from './routes/PatientRoutes.js';
-import registerConsultationRoutes from './routes/ConsultationRoutes.js';
+//import registerConsultationRoutes from './routes/ConsultationRoutes.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
             // Registra todas as rotas
             registerUserRoutes(expressApp, db);
             registerPatientRoutes(expressApp, db);
-            registerConsultationRoutes(expressApp, db);
+            //registerConsultationRoutes(expressApp, db);
 
             // Middleware de tratamento de erros
             expressApp.use((err, req, res, next) => {

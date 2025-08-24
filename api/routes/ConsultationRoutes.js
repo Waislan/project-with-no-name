@@ -1,3 +1,4 @@
+/*
 import { Router } from 'express';
 import ConsultationFactory from '../factories/ConsultationFactory.js';
 
@@ -14,3 +15,4 @@ export default function registerConsultationRoutes(app, db) {
   app.put('/users/:userId/patients/:patientId/consultations/:id', controller.update.bind(controller));
   app.delete('/users/:userId/patients/:patientId/consultations/:id', controller.delete.bind(controller));
 }
+*/

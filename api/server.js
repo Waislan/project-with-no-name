@@ -3,7 +3,7 @@ import App from './app.js';
 import { connectToDatabase } from './database/db.js';
 import registerUserRoutes from './routes/UserRoutes.js';
 import registerPatientRoutes from './routes/PatientRoutes.js';
-import registerConsultationRoutes from './routes/ConsultationRoutes.js';
+//import registerConsultationRoutes from './routes/ConsultationRoutes.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,7 +13,7 @@ const initializeApp = async () => {
     const db = await connectToDatabase();
     console.log('Connected to database!');
 
-    const appInstance = new App(db, [registerUserRoutes, registerPatientRoutes, registerConsultationRoutes]);
+    const appInstance = new App(db, [registerUserRoutes, registerPatientRoutes/*, registerConsultationRoutes*/]);
     await appInstance.setup();
 
     return appInstance.getInstance();
