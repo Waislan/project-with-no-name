@@ -1,4 +1,5 @@
 import express from 'express';
+import { createServer } from '@vercel/node';
 import { connectToDatabase } from './database/db.js';
 import registerUserRoutes from './routes/UserRoutes.js';
 import registerPatientRoutes from './routes/PatientRoutes.js';
@@ -59,5 +60,5 @@ export default async function handler(req, res) {
     }
 
     // Delega a requisição para o Express
-    return app(req, res);
+    return createServer(app);
 }
