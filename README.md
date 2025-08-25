@@ -27,6 +27,11 @@ O projeto segue uma **Arquitetura Limpa** com separação clara de responsabilid
 - 🔐 **Validações**: Nome obrigatório, CPF obrigatório, user_id obrigatório
 - 🆔 **Identificação**: IDs UUID únicos
 
+### Consultations (Consultas)
+- ✅ **CRUD Completo**: Criar, ler, atualizar e deletar consultas
+- 🔗 **Dependência**: Consultas pertencem a um usuário e a um paciente
+- 🔐 **Validações**: Ownership do paciente em relação ao usuário
+
 ## 📡 Endpoints da API
 
 ### Users
@@ -55,6 +60,16 @@ GET    /patients           - Listar todos os pacientes
 GET    /patients/:id       - Buscar paciente por ID
 ```
 
+### Consultations (Nested Routes)
+```
+GET    /users/:userId/consultations                              - Listar consultas de um usuário
+GET    /users/:userId/patients/:patientId/consultations           - Listar consultas de um paciente
+POST   /users/:userId/patients/:patientId/consultations           - Criar consulta
+GET    /users/:userId/patients/:patientId/consultations/:id       - Buscar consulta específica
+PUT    /users/:userId/patients/:patientId/consultations/:id       - Atualizar consulta
+DELETE /users/:userId/patients/:patientId/consultations/:id       - Deletar consulta
+```
+
 ## 🛠️ Tecnologias
 
 - **Runtime**: Node.js (ES Modules)
@@ -72,25 +87,30 @@ src/
 ├── server.js                 # Ponto de entrada da aplicação
 ├── controllers/              # Manipuladores de requisições
 │   ├── UserController.js
-│   └── PatientController.js
+│   ├── PatientController.js
+│   └── ConsultationController.js
 ├── database/                 # Configuração do banco de dados
 │   └── db.js
 ├── factories/                # Injeção de dependências
 │   ├── UserFactory.js
-│   └── PatientFactory.js
+│   ├── PatientFactory.js
+│   └── ConsultationFactory.js
 ├── interfaces/               # Classes base abstratas
 │   ├── IController.js
 │   ├── IService.js
 │   └── IRepository.js
 ├── repositories/             # Camada de acesso a dados
 │   ├── UserRepository.js
-│   └── PatientRepository.js
+│   ├── PatientRepository.js
+│   └── ConsultationRepository.js
 ├── routes/                   # Definições de rotas
 │   ├── UserRoutes.js
-│   └── PatientRoutes.js
+│   ├── PatientRoutes.js
+│   └── ConsultationRoutes.js
 └── services/                 # Lógica de negócio
     ├── UserService.js
-    └── PatientService.js
+    ├── PatientService.js
+    └── ConsultationService.js
 ```
 
 ## 🗄️ Modelo de Dados
@@ -127,6 +147,21 @@ patients (
 )
 ```
 
+### Consultations
+```sql
+consultations (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES auth.users(id),
+    patient_id UUID NOT NULL REFERENCES patients(id),
+    consultation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    notes TEXT,
+    report TEXT,
+    transcription TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+```
+
 ## ⚙️ Configuração
 
 ### 1. Variáveis de Ambiente
@@ -134,7 +169,13 @@ Crie um arquivo `.env` na raiz do projeto:
 
 ```env
 PORT=3000
-DB_URL=postgresql://username:password@localhost:5432/database_name
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=database_name
+# Opcionalmente, se usar URL completa (não habilitado por padrão no código):
+# DB_URL=postgresql://username:password@localhost:5432/database_name
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
@@ -142,7 +183,7 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 ### 2. Banco de Dados
 Certifique-se de que:
 - O Supabase está configurado e funcionando
-- As tabelas `user_profiles` e `patients` existem no seu banco PostgreSQL
+- As tabelas `user_profiles`, `patients` e `consultations` existem no seu banco PostgreSQL
 - A tabela `auth.users` é gerenciada pelo Supabase Auth
 
 ### 3. Instalação de Dependências
@@ -176,9 +217,9 @@ curl -X POST http://localhost:3000/users/{userId}/patients \
 curl http://localhost:3000/users/{userId}/patients
 ```
 
-### Buscar Usuário com Perfil Completo
+### Listar Consultas de um Paciente
 ```bash
-curl http://localhost:3000/users/{userId}/profile
+curl http://localhost:3000/users/{userId}/patients/{patientId}/consultations
 ```
 
 ## 🔒 Validações
@@ -192,6 +233,11 @@ curl http://localhost:3000/users/{userId}/profile
 - CPF é obrigatório
 - User ID é obrigatório
 - Paciente deve pertencer ao usuário especificado
+
+### Consultations
+- User ID é obrigatório
+- Patient ID é obrigatório
+- Paciente deve pertencer ao usuário informado (ownership)
 
 ## 🚨 Tratamento de Erros
 
